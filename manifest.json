@@ -1,4 +1,5 @@
 {
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3at4De4zJ1zTTWobVrbgGwE10QYMLscR7xKW4+ZO79EcEh6j21FGBUNKHtdVqIZxAA1UeeMTa1GY1iYbKxbDAmIdrwJHGfQke9HLsFzUY1fOxunDCeU6Ea6fthKsuGpWkYunaKfqev9khnG3LES11PIUTmG9kBoGgs+MjksbikrqR4JyEzKNoDgle3DFsIJjfONM1ux7rKRKW2sSPYkDs+f+4dRhE+BnR2dkcnzfIbiIAdEkuq95WL4dF4PVeqvtI95vM/1jOenym1hAVpT7B/NI87LtGQ7KmTPdmu65Dv3xH/gZ0+zshNlNhSLqAB6g4bsJgIB32nIqNO38/8CJ/QIDAQAB",
   "manifest_version": 3,
   "name": "SubdueTube",
   "description": "Make YouTube less engaging: greyscale, blur or replace thumbnails, and hide Shorts, comments, recommendations and other distractions.",
