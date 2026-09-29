@@ -1,15 +1,67 @@
-# YouTube Greyscale Toggle
+# SubdueTube
 
-A lightweight Chrome extension that toggles YouTube into greyscale mode. Useful for reducing visual stimulation, saving your eyes at night, or just vibing in monochrome.
+A Chrome extension that makes YouTube less engaging. It started as a one-click greyscale switch and now also dims, replaces or removes thumbnails and hides the parts of the site designed to keep you watching.
+
+Click the toolbar icon to open the popup. Everything is controlled from there.
 
 ---
 
 ## Features
 
-- **One-click toggle** - click the extension icon to enable/disable greyscale
-- **Persistent state** - your preference is remembered across tabs and browser restarts
-- **Sync across tabs** - toggling in one YouTube tab instantly updates all other open YouTube tabs
-- **Scoped effect** - greyscale is applied only to the video player, thumbnails, and avatars; the sidebar, subscriptions, and UI chrome remain unaffected
+### Thumbnail slider
+
+One slider with five steps. Each step replaces the last:
+
+| Step | What you get |
+|---|---|
+| Off | Normal YouTube |
+| Greyscale | Player, thumbnails and avatars in greyscale |
+| Greyscale + blur | Greyscale, plus blurred thumbnails |
+| Replace with text | Each thumbnail becomes a text tile showing the video title and channel name |
+| Remove thumbnails | Thumbnails hidden; title and channel text stay |
+
+Blur is only used at step 3, so it never blurs the text tiles.
+
+**Watch videos in colour** sits under the slider. When on, the main player on a video page keeps its colour while thumbnails and avatars stay grey.
+
+### Master switch and presets
+
+- **Master switch** (top right of the popup): pauses everything without losing your settings. The toolbar icon goes inactive too.
+- **Focus** preset: turns every toggle on and sets the slider to text tiles.
+- **Light** preset: turns every toggle off and sets the slider to greyscale.
+- Presets leave the master switch, "Watch videos in colour" and "Hide 'You' section" alone.
+
+### Toggles
+
+| Group | Toggle | Effect |
+|---|---|---|
+| Home & feeds | Hide Shorts | Removes Shorts shelves, videos and sidebar links. Direct Shorts links open as normal videos |
+| | Hide home feed | Hides the home grid and the Home button. The logo then goes to Subscriptions |
+| | Hide Trending / Explore | Removes the Explore section and pages |
+| Video page | Hide comments | Hides the comments section |
+| | Hide recommended | Hides the suggested-videos list |
+| | Hide end suggestions | Hides the end-of-video wall, in-video cards and the pause overlay |
+| | Hide live chat | Hides the chat panel on live streams |
+| Attention | Turn off autoplay | Switches off the "up next" autoplay toggle in the player |
+| | Hide notifications | Hides the bell and removes the unread count from the tab title |
+| | Stop hover previews | Stops the video preview that plays when you hover a thumbnail |
+
+### More options
+
+A collapsed section in the popup, for the smaller changes:
+
+| Toggle | Effect |
+|---|---|
+| Hide view / like / sub counts | Hides view, like and subscriber counts. On video cards it hides the whole "views + age" line |
+| Hide description | Hides the description box under the player |
+| Hide like & share bar | Hides the like, share and save buttons |
+| Hide channel row | Hides the channel name and subscribe button under the player |
+| Hide donate / merch | Hides donation, merch and ticket shelves |
+| Hide comment avatars | Hides profile pictures beside comments |
+| Hide "More from YouTube" | Hides the Premium, Music and Kids section of the sidebar |
+| Hide "You" section | Hides History, Playlists, Watch later and Liked videos in the sidebar |
+
+Settings are remembered across tabs and browser restarts, and change in all open YouTube tabs at once.
 
 ---
 
@@ -31,18 +83,8 @@ A lightweight Chrome extension that toggles YouTube into greyscale mode. Useful 
    - Select the cloned folder
 
 4. **Done!**
-   - The extension icon will appear in your toolbar
-   - Navigate to YouTube and click the icon to toggle greyscale
-
----
-
-## Usage
-
-| Action | Result |
-|---|---|
-| Click extension icon on YouTube | Toggle greyscale on/off |
-| Open a new YouTube tab | Inherits the current toggle state |
-| Reload the page | State is preserved |
+   - Click the extension icon on a YouTube page to open the popup
+   - After updating the code, click the reload arrow on the extension card, then refresh YouTube
 
 ---
 
@@ -51,10 +93,13 @@ A lightweight Chrome extension that toggles YouTube into greyscale mode. Useful 
 ```
 youtube-greyscale-extension/
 ├── manifest.json      # Extension config (Manifest V3)
-├── background.js      # Handles icon click, persists state via chrome.storage
-├── content.js         # Applies/removes greyscale class on YouTube pages
-├── style.css          # CSS filter scoped to video player, thumbnails, and avatars
-├── icon16.png
+├── popup.html         # The settings popup: master switch, presets, slider, toggles
+├── popup.js           # Loads and saves popup settings in chrome.storage
+├── background.js      # Keeps the toolbar icon in sync with the master switch and slider
+├── content.js         # Turns settings into classes on the page; text tiles, autoplay, tab title, redirects
+├── style.css          # All the visual rules, one block per feature
+├── TODO.md            # Open tasks and ideas
+├── icon16.png         # Toolbar icons (plus -active versions shown when the slider is above Off)
 ├── icon48.png
 └── icon128.png
 ```
@@ -63,9 +108,19 @@ youtube-greyscale-extension/
 
 ## How It Works
 
-1. **`background.js`** listens for clicks on the extension icon and flips a boolean (`isGrey`) in `chrome.storage.local`
-2. **`content.js`** runs on every YouTube page. It reads the stored state on load and watches for storage changes, so all open tabs update in real time
-3. **`style.css`** applies `filter: grayscale(100%)` to a targeted set of YouTube elements including the video player, thumbnails, and avatars, leaving the rest of the UI intact
+1. **`popup.js`** saves each setting to `chrome.storage.local`. The slider is stored as one number, `thumbLevel` (0 to 4), each toggle as true/false, and the master switch as `enabled`. Presets write many of these at once.
+2. **`content.js`** runs on every YouTube page. It reads the settings, adds a class to `<html>` for each active one (for example `hide-shorts`), and redraws whenever storage changes, so all open tabs follow. If the master switch is off, no classes are added.
+3. **`style.css`** contains rules that only apply when the matching class is present, such as `html.hide-shorts ytd-reel-shelf-renderer { display: none }`.
+4. Five features need JavaScript, not just CSS: the text tiles (copy each card's title and channel into the thumbnail), autoplay (clicks YouTube's own switch off), the tab title (strips the "(3)" count), the logo redirect, and the Shorts link redirect.
+5. **`background.js`** swaps the toolbar icon to its active version whenever the master switch is on and the slider is above Off.
+
+---
+
+## Known limitations
+
+- YouTube changes its page markup often. If a toggle stops working, its selector in `style.css` or `content.js` probably needs updating.
+- Turning off autoplay changes YouTube's own autoplay setting, which is saved to your account when signed in.
+- Typing `youtube.com` in the address bar still opens the (hidden, so blank) home page when "Hide home feed" is on. Only the logo is redirected.
 
 ---
 

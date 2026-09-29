@@ -1,11 +1,212 @@
-/* Target only the video player and its contents */
-html.grey-mode .ytThumbnailViewModelImage,
-html.grey-mode .ytd-thumbnail,
+/* Greyscale: player, avatars and thumbnails */
 html.grey-mode .yt-spec-avatar-shape,
-html.grey-mode .ytThumbnailViewModelHost,
-html.grey-mode .ytCoreImageHost,
 html.grey-mode #movie_player,
 html.grey-mode .html5-video-player,
-html.grey-mode video {
+html.grey-mode video,
+html.grey-mode .ytThumbnailViewModelImage,
+html.grey-mode .ytd-thumbnail,
+html.grey-mode .ytThumbnailViewModelHost,
+html.grey-mode .ytCoreImageHost {
     filter: grayscale(100%) !important;
+}
+
+/* Blur: thumbnails only */
+html.blur-mode .ytThumbnailViewModelImage,
+html.blur-mode .ytd-thumbnail,
+html.blur-mode .ytThumbnailViewModelHost,
+html.blur-mode .ytCoreImageHost {
+    filter: blur(2px) !important;
+}
+
+/* Both on: a second filter rule would replace the first, so combine them here.
+   Two classes make this more specific than the single-class rules above. */
+html.grey-mode.blur-mode .ytThumbnailViewModelImage,
+html.grey-mode.blur-mode .ytd-thumbnail,
+html.grey-mode.blur-mode .ytThumbnailViewModelHost,
+html.grey-mode.blur-mode .ytCoreImageHost {
+    filter: grayscale(100%) blur(2px) !important;
+}
+
+/* Distraction hiding. Each class is toggled on <html> by content.js */
+
+/* Shorts: shelves, sidebar links, and any video that links to /shorts/ */
+html.hide-shorts ytd-reel-shelf-renderer,
+html.hide-shorts ytd-rich-shelf-renderer[is-shorts],
+html.hide-shorts ytd-rich-item-renderer:has(a[href*="/shorts/"]),
+html.hide-shorts ytd-video-renderer:has(a[href*="/shorts/"]),
+html.hide-shorts ytd-compact-video-renderer:has(a[href*="/shorts/"]),
+html.hide-shorts ytm-shorts-lockup-view-model,
+html.hide-shorts ytm-shorts-lockup-view-model-v2,
+html.hide-shorts ytd-guide-entry-renderer:has(a[title="Shorts"]),
+html.hide-shorts ytd-mini-guide-entry-renderer[aria-label="Shorts"],
+html.hide-shorts yt-tab-shape[tab-title="Shorts"] {
+    display: none !important;
+}
+
+/* Comments on the watch page */
+html.hide-comments ytd-comments#comments,
+html.hide-comments #comment-teaser {
+    display: none !important;
+}
+
+/* Recommended videos beside/below the player */
+html.hide-recommended ytd-watch-next-secondary-results-renderer,
+html.hide-recommended #related {
+    display: none !important;
+}
+
+/* Home page video grid */
+html.hide-feed ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
+html.hide-feed ytd-guide-entry-renderer:has(a[href="/"]),
+html.hide-feed ytd-mini-guide-entry-renderer:has(a[href="/"]) {
+    display: none !important;
+}
+
+/* Hide thumbnails: the title and channel name stay visible in each card.
+   Covers the older (ytd-thumbnail) and newer (view-model) markup. */
+html.hide-thumbnails ytd-thumbnail,
+html.hide-thumbnails yt-thumbnail-view-model,
+html.hide-thumbnails ytd-playlist-thumbnail,
+html.hide-thumbnails yt-collection-thumbnail-view-model,
+html.hide-thumbnails .yt-lockup-view-model__content-image,
+html.hide-thumbnails .ytLockupViewModelContentImage {
+    display: none !important;
+}
+
+/* Replace thumbnails: hide the image, draw a text tile (made by content.js) over it */
+html.replace-thumbnails ytd-thumbnail img,
+html.replace-thumbnails yt-thumbnail-view-model img {
+    opacity: 0 !important;
+}
+
+html.replace-thumbnails .text-tile {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    container-type: size; /* lets the text below size itself from the tile width (cqw) */
+    gap: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #272727;
+    color: #f1f1f1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+html.replace-thumbnails .text-tile-title {
+    font-size: clamp(12px, 6.5cqw, 26px);
+    font-weight: 600;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+html.replace-thumbnails .text-tile-channel {
+    font-size: clamp(11px, 4.5cqw, 18px);
+    color: #aaa;
+}
+
+/* Hover previews: the short video that plays when you hover a thumbnail */
+html.hide-preview ytd-video-preview {
+    display: none !important;
+}
+
+/* Notifications: bell and unread badge in the top bar */
+html.hide-notifs ytd-notification-topbar-button-renderer,
+html.hide-notifs ytd-notification-topbar-button-shape-renderer {
+    display: none !important;
+}
+
+/* End-of-video suggestions, in-video cards and the pause overlay */
+html.hide-endscreen .html5-endscreen,
+html.hide-endscreen .ytp-fullscreen-grid,
+html.hide-endscreen .ytp-ce-element,
+html.hide-endscreen .ytp-cards-teaser,
+html.hide-endscreen .ytp-pause-overlay {
+    display: none !important;
+}
+
+/* Trending / Explore: sidebar entries, their section and the pages */
+html.hide-trending ytd-guide-section-renderer:has(a[href^="/feed/trending"]),
+html.hide-trending ytd-guide-section-renderer:has(a[href^="/feed/storefront"]),
+html.hide-trending ytd-guide-section-renderer:has(a[href^="/gaming"]),
+html.hide-trending ytd-guide-section-renderer:has(a[href*="UC-9-kyTW8ZkZNDHQJ6FgpwQ"]),
+html.hide-trending ytd-guide-entry-renderer:has(a[href^="/feed/explore"]),
+html.hide-trending ytd-mini-guide-entry-renderer:has(a[href^="/feed/explore"]),
+html.hide-trending ytd-mini-guide-entry-renderer:has(a[href^="/feed/trending"]),
+html.hide-trending ytd-browse[page-subtype="trending"] {
+    display: none !important;
+}
+
+/* Live chat panel */
+html.hide-chat ytd-live-chat-frame#chat {
+    display: none !important;
+}
+
+/* Watch in colour: the main player on the watch page keeps its colour.
+   Thumbnails, avatars and hover previews stay greyscale. */
+html.grey-mode.colour-player ytd-watch-flexy #movie_player,
+html.grey-mode.colour-player ytd-watch-flexy .html5-video-player,
+html.grey-mode.colour-player ytd-watch-flexy video {
+    filter: none !important;
+}
+
+/* ---- "More options" (popup accordion) ---- */
+
+/* Counts: views, likes, subscribers. Card rows that show "views • age" lose both. */
+html.hide-counts #owner-sub-count,
+html.hide-counts ytd-video-view-count-renderer,
+html.hide-counts #info-container #info,
+html.hide-counts ytd-watch-metadata #actions like-button-view-model .yt-spec-button-shape-next__button-text-content,
+html.hide-counts ytd-video-meta-block #metadata-line,
+html.hide-counts .ytContentMetadataViewModelMetadataRow:nth-child(2),
+html.hide-counts .yt-content-metadata-view-model__metadata-row:nth-child(2) {
+    display: none !important;
+}
+
+/* Watch page: description box, like/share row, channel row */
+html.hide-desc ytd-watch-metadata #description,
+html.hide-actions ytd-watch-metadata #actions,
+html.hide-owner ytd-watch-metadata #owner {
+    display: none !important;
+}
+
+/* Donate, merch and ticket shelves under the player */
+html.hide-banners #donation-shelf,
+html.hide-banners ytd-merch-shelf-renderer,
+html.hide-banners #ticket-shelf,
+html.hide-banners #offer-module {
+    display: none !important;
+}
+
+/* Profile pictures beside comments */
+html.hide-comment-avatars ytd-comments #author-thumbnail {
+    display: none !important;
+}
+
+/* Sidebar section holding YouTube Premium, Music and Kids links.
+   Not matched on Studio: "Your videos" in the You section links there too. */
+html.hide-more-yt ytd-guide-section-renderer:has(a[href*="music.youtube.com"]),
+html.hide-more-yt ytd-guide-section-renderer:has(a[href*="youtubekids.com"]),
+html.hide-more-yt ytd-guide-section-renderer:has(a[href$="/premium"]),
+html.hide-more-yt #sections > ytd-guide-section-renderer:nth-last-child(2) {
+    display: none !important;
+}
+
+/* "You" section of the sidebar (History, Playlists, Watch later, Liked videos) and its mini-sidebar button */
+html.hide-you ytd-guide-section-renderer:has(a[href*="/feed/history"]),
+html.hide-you ytd-guide-section-renderer:has(a[href*="/feed/playlists"]),
+html.hide-you ytd-guide-section-renderer:has(a[href*="list=WL"]),
+html.hide-you ytd-guide-section-renderer:has(a[href*="/feed/you"]),
+html.hide-you ytd-guide-entry-renderer:has(a[href*="/feed/you"]),
+html.hide-you ytd-mini-guide-entry-renderer:has(a[href*="/feed/you"]) {
+    display: none !important;
 }

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card: #f3f4f6;
+      --text: #1f2328;
+      --muted: #6b7280;
+      --accent: #dc2626;
+      --track: #cbd0d6;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #181818;
+        --card: #262626;
+        --text: #f1f1f1;
+        --muted: #9a9a9a;
+        --track: #4a4a4a;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, sans-serif;
+      width: 300px;
+      margin: 0;
+      padding: 14px;
+      background: var(--bg);
+      color: var(--text);
+    }
+    h1 { font-size: 15px; margin: 0; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    #settings { transition: opacity 0.15s; }
+    body.paused #settings { opacity: 0.4; }
+
+    .presets { display: flex; gap: 8px; }
+    .presets button {
+      flex: 1;
+      padding: 7px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--text);
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .presets button:hover { background: var(--track); }
+
+    details { margin-top: 14px; }
+    summary {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    details .card { margin-top: 6px; }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 14px 0 6px;
+    }
+    .card { background: var(--card); border-radius: 10px; padding: 4px 10px; }
+
+    /* Thumbnail slider */
+    .slider-card { padding: 12px; text-align: center; }
+    #level-icon { font-size: 30px; line-height: 1.1; }
+    #level-name { font-size: 14px; font-weight: 600; margin: 2px 0 8px; }
+    #level { width: 100%; accent-color: var(--accent); margin: 0; }
+    .ticks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      padding: 0 2px;
+      opacity: 0.7;
+    }
+
+    /* Toggle rows */
+    label.row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    label.row + label.row { border-top: 1px solid var(--track); }
+    .icon { width: 20px; text-align: center; font-size: 15px; }
+    .name { flex: 1; }
+
+    /* Switch: the real checkbox is restyled, so the data-key wiring still works */
+    input[type="checkbox"] {
+      appearance: none;
+      width: 34px;
+      height: 20px;
+      margin: 0;
+      border-radius: 10px;
+      background: var(--track);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    input[type="checkbox"]::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.15s;
+    }
+    input[type="checkbox"]:checked { background: var(--accent); }
+    input[type="checkbox"]:checked::after { transform: translateX(14px); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>SubdueTube</h1>
+    <input type="checkbox" data-key="enabled" title="Turn everything on or off">
+  </div>
+
+  <div id="settings">
+  <div class="presets">
+    <button type="button" data-preset="focus">🎯 Focus</button>
+    <button type="button" data-preset="light">🌙 Light</button>
+  </div>
+
+  <div class="section-title">Thumbnails</div>
+  <div class="card slider-card">
+    <div id="level-icon"></div>
+    <div id="level-name"></div>
+    <input type="range" id="level" min="0" max="4" step="1">
+    <div class="ticks"><span>🎨</span><span>⚪</span><span>🌫️</span><span>🔤</span><span>🚫</span></div>
+  </div>
+
+  <div class="card" style="margin-top: 8px;">
+    <label class="row"><span class="icon">🌈</span><span class="name">Watch videos in colour</span><input type="checkbox" data-key="colourPlayer"></label>
+  </div>
+
+  <div class="section-title">Home &amp; feeds</div>
+  <div class="card">
+    <label class="row"><span class="icon">🩳</span><span class="name">Hide Shorts</span><input type="checkbox" data-key="hideShorts"></label>
+    <label class="row"><span class="icon">🏠</span><span class="name">Hide home feed</span><input type="checkbox" data-key="hideFeed"></label>
+    <label class="row"><span class="icon">🔥</span><span class="name">Hide Trending / Explore</span><input type="checkbox" data-key="hideTrending"></label>
+  </div>
+
+  <div class="section-title">Video page</div>
+  <div class="card">
+    <label class="row"><span class="icon">💬</span><span class="name">Hide comments</span><input type="checkbox" data-key="hideComments"></label>
+    <label class="row"><span class="icon">👉</span><span class="name">Hide recommended</span><input type="checkbox" data-key="hideRecommended"></label>
+    <label class="row"><span class="icon">🔚</span><span class="name">Hide end suggestions</span><input type="checkbox" data-key="hideEndscreen"></label>
+    <label class="row"><span class="icon">📡</span><span class="name">Hide live chat</span><input type="checkbox" data-key="hideChat"></label>
+  </div>
+
+  <div class="section-title">Attention</div>
+  <div class="card">
+    <label class="row"><span class="icon">⏭️</span><span class="name">Turn off autoplay</span><input type="checkbox" data-key="stopAutoplay"></label>
+    <label class="row"><span class="icon">🔔</span><span class="name">Hide notifications</span><input type="checkbox" data-key="hideNotifs"></label>
+    <label class="row"><span class="icon">▶️</span><span class="name">Stop hover previews</span><input type="checkbox" data-key="hidePreview"></label>
+  </div>
+
+  <details>
+    <summary>More options</summary>
+    <div class="card">
+      <label class="row"><span class="icon">🔢</span><span class="name">Hide view / like / sub counts</span><input type="checkbox" data-key="hideCounts"></label>
+      <label class="row"><span class="icon">📝</span><span class="name">Hide description</span><input type="checkbox" data-key="hideDesc"></label>
+      <label class="row"><span class="icon">👍</span><span class="name">Hide like &amp; share bar</span><input type="checkbox" data-key="hideActions"></label>
+      <label class="row"><span class="icon">📺</span><span class="name">Hide channel row</span><input type="checkbox" data-key="hideOwner"></label>
+      <label class="row"><span class="icon">🛍️</span><span class="name">Hide donate / merch</span><input type="checkbox" data-key="hideBanners"></label>
+      <label class="row"><span class="icon">🙂</span><span class="name">Hide comment avatars</span><input type="checkbox" data-key="hideCommentAvatars"></label>
+      <label class="row"><span class="icon">📂</span><span class="name">Hide "More from YouTube"</span><input type="checkbox" data-key="hideMoreYt"></label>
+      <label class="row"><span class="icon">👤</span><span class="name">Hide "You" section</span><input type="checkbox" data-key="hideYou"></label>
+    </div>
+  </details>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
