@@ -71,7 +71,7 @@ Settings are remembered across tabs and browser restarts, and change in all open
 
 1. **Clone this repository**
    ```bash
-   git clone https://github.com/liam-hayward/youtube-greyscale-extension
+   git clone https://github.com/liam-hayward/subduetube
    ```
 
 2. **Open Chrome Extensions**
@@ -91,7 +91,7 @@ Settings are remembered across tabs and browser restarts, and change in all open
 ## File Structure
 
 ```
-youtube-greyscale-extension/
+SubdueTube/
 ├── manifest.json      # Extension config (Manifest V3)
 ├── popup.html         # The settings popup: master switch, presets, slider, toggles
 ├── popup.js           # Loads and saves popup settings in chrome.storage
@@ -126,7 +126,7 @@ youtube-greyscale-extension/
 
 ## Contributing
 
-Pull requests are welcome! If you find a bug or have a feature suggestion, please [open an issue](https://github.com/liam-hayward/youtube-greyscale-extension/issues).
+Pull requests are welcome! If you find a bug or have a feature suggestion, please [open an issue](https://github.com/liam-hayward/subduetube/issues).
 
 ---
 
