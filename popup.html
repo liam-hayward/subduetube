@@ -35,19 +35,6 @@
     #settings { transition: opacity 0.15s; }
     body.paused #settings { opacity: 0.4; }
 
-    .presets { display: flex; gap: 8px; }
-    .presets button {
-      flex: 1;
-      padding: 7px;
-      border: 0;
-      border-radius: 8px;
-      background: var(--card);
-      color: var(--text);
-      font: inherit;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .presets button:hover { background: var(--track); }
 
     details { margin-top: 14px; }
     summary {
@@ -58,7 +45,7 @@
       color: var(--muted);
       cursor: pointer;
     }
-    details .card { margin-top: 6px; }
+    details .section-title { margin-top: 10px; }
 
     .section-title {
       font-size: 11px;
@@ -131,12 +118,7 @@
   </div>
 
   <div id="settings">
-  <div class="presets">
-    <button type="button" data-preset="focus">🎯 Focus</button>
-    <button type="button" data-preset="light">🌙 Light</button>
-  </div>
-
-  <div class="section-title">Thumbnails</div>
+  <div class="section-title" style="margin-top: 0;">Thumbnails</div>
   <div class="card slider-card">
     <div id="level-icon"></div>
     <div id="level-name"></div>
@@ -145,7 +127,7 @@
   </div>
 
   <div class="card" style="margin-top: 8px;">
-    <label class="row"><span class="icon">🌈</span><span class="name">Watch videos in colour</span><input type="checkbox" data-key="colourPlayer"></label>
+    <label class="row"><span class="icon">🧑</span><span class="name">Make channel pictures greyscale</span><input type="checkbox" data-key="greyAvatars"></label>
   </div>
 
   <div class="section-title">Home &amp; feeds</div>
@@ -161,6 +143,7 @@
     <label class="row"><span class="icon">👉</span><span class="name">Hide recommended</span><input type="checkbox" data-key="hideRecommended"></label>
     <label class="row"><span class="icon">🔚</span><span class="name">Hide end suggestions</span><input type="checkbox" data-key="hideEndscreen"></label>
     <label class="row"><span class="icon">📡</span><span class="name">Hide live chat</span><input type="checkbox" data-key="hideChat"></label>
+    <label class="row"><span class="icon">⚫</span><span class="name">Make videos greyscale</span><input type="checkbox" data-key="greyPlayer"></label>
   </div>
 
   <div class="section-title">Attention</div>
@@ -172,13 +155,17 @@
 
   <details>
     <summary>More options</summary>
+    <div class="section-title">Video page</div>
     <div class="card">
-      <label class="row"><span class="icon">🔢</span><span class="name">Hide view / like / sub counts</span><input type="checkbox" data-key="hideCounts"></label>
+      <label class="row" title="View, like and subscriber counts, plus the upload date and #hashtags line"><span class="icon">🔢</span><span class="name">Hide counts, date &amp; hashtags</span><input type="checkbox" data-key="hideCounts"></label>
       <label class="row"><span class="icon">📝</span><span class="name">Hide description</span><input type="checkbox" data-key="hideDesc"></label>
       <label class="row"><span class="icon">👍</span><span class="name">Hide like &amp; share bar</span><input type="checkbox" data-key="hideActions"></label>
       <label class="row"><span class="icon">📺</span><span class="name">Hide channel row</span><input type="checkbox" data-key="hideOwner"></label>
       <label class="row"><span class="icon">🛍️</span><span class="name">Hide donate / merch</span><input type="checkbox" data-key="hideBanners"></label>
       <label class="row"><span class="icon">🙂</span><span class="name">Hide comment avatars</span><input type="checkbox" data-key="hideCommentAvatars"></label>
+    </div>
+    <div class="section-title">Sidebar</div>
+    <div class="card">
       <label class="row"><span class="icon">📂</span><span class="name">Hide "More from YouTube"</span><input type="checkbox" data-key="hideMoreYt"></label>
       <label class="row"><span class="icon">👤</span><span class="name">Hide "You" section</span><input type="checkbox" data-key="hideYou"></label>
     </div>

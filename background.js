@@ -18,5 +18,6 @@ chrome.storage.onChanged.addListener((changes) => {
     if (changes.thumbLevel || changes.enabled) refreshIcon();
 });
 
-// Restore correct icon on service worker startup
+// Restore correct icon on browser startup, and after install, update or reload
 chrome.runtime.onStartup.addListener(refreshIcon);
+chrome.runtime.onInstalled.addListener(refreshIcon);

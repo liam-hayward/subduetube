@@ -41,22 +41,4 @@ slider.addEventListener("input", () => {
     chrome.storage.local.set({ thumbLevel: Number(slider.value) });
 });
 
-// Presets set every toggle at once. The master switch, "watch in colour" and "hide You section" are left alone.
-const KEEP = ["enabled", "colourPlayer", "hideYou"];
-const PRESETS = {
-    focus: { toggles: true, thumbLevel: 3 },
-    light: { toggles: false, thumbLevel: 1 }
-};
-
-document.querySelectorAll("[data-preset]").forEach((button) => {
-    button.addEventListener("click", () => {
-        const preset = PRESETS[button.dataset.preset];
-        const values = { thumbLevel: preset.thumbLevel };
-        boxes.forEach((box) => {
-            if (!KEEP.includes(box.dataset.key)) values[box.dataset.key] = preset.toggles;
-        });
-        chrome.storage.local.set(values, loadUI);
-    });
-});
-
 loadUI();

@@ -12,7 +12,8 @@ const FEATURES = {
     hideTrending: "hide-trending",
     hideChat: "hide-chat",
     stopAutoplay: "stop-autoplay",
-    colourPlayer: "colour-player",
+    greyPlayer: "grey-player",
+    greyAvatars: "grey-avatars",
     // "More options" accordion in the popup
     hideCounts: "hide-counts",
     hideDesc: "hide-desc",
@@ -47,6 +48,7 @@ const setClass = (className, isOn) => {
     if (className === "hide-notifs") stripTitleCount();
     if (className === "stop-autoplay" && isOn) pollAutoplay();
     if (className === "hide-shorts" && isOn) redirectShorts();
+    if (className === "hide-feed" && isOn) redirectHome();
 };
 
 const render = () => {
@@ -60,18 +62,16 @@ const render = () => {
     }
 };
 
-// When the home feed is hidden, the logo would lead to a blank page.
-// Send it to Subscriptions instead. YouTube handles logo clicks itself
-// (without a real page load), so we catch the click first, in the capture phase.
+// When the home feed is hidden, the home page would be blank.
+// Send it to Subscriptions instead, however it was reached (logo, address bar,
+// bookmark, Back button). replace() keeps the blank page out of history.
 const SUBSCRIPTIONS_URL = "https://www.youtube.com/feed/subscriptions";
 
-document.addEventListener("click", (event) => {
+const redirectHome = () => {
     if (!html.classList.contains("hide-feed")) return;
-    if (!event.target.closest("a#logo")) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    location.href = SUBSCRIPTIONS_URL;
-}, true);
+    if (location.pathname === "/") location.replace(SUBSCRIPTIONS_URL);
+};
+window.addEventListener("yt-navigate-finish", redirectHome);
 
 // With Shorts hidden, a direct /shorts/<id> link opens as a normal video instead.
 const redirectShorts = () => {

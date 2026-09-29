@@ -15,33 +15,33 @@ One slider with five steps. Each step replaces the last:
 | Step | What you get |
 |---|---|
 | Off | Normal YouTube |
-| Greyscale | Player, thumbnails and avatars in greyscale |
+| Greyscale | Thumbnails and hover previews in greyscale. Videos you open and channel pictures stay in colour |
 | Greyscale + blur | Greyscale, plus blurred thumbnails |
 | Replace with text | Each thumbnail becomes a text tile showing the video title and channel name |
 | Remove thumbnails | Thumbnails hidden; title and channel text stay |
 
 Blur is only used at step 3, so it never blurs the text tiles.
 
-**Watch videos in colour** sits under the slider. When on, the main player on a video page keeps its colour while thumbnails and avatars stay grey.
+**Make channel pictures greyscale** sits under the slider. It is off by default and works at any slider step.
 
-### Master switch and presets
+The slider only affects how you *choose* a video. Once you open one, it plays in colour unless you switch on **Make videos greyscale** (under Video page).
 
-- **Master switch** (top right of the popup): pauses everything without losing your settings. The toolbar icon goes inactive too.
-- **Focus** preset: turns every toggle on and sets the slider to text tiles.
-- **Light** preset: turns every toggle off and sets the slider to greyscale.
-- Presets leave the master switch, "Watch videos in colour" and "Hide 'You' section" alone.
+### Master switch
+
+The switch at the top right of the popup pauses everything without losing your settings. The toolbar icon goes inactive too.
 
 ### Toggles
 
 | Group | Toggle | Effect |
 |---|---|---|
 | Home & feeds | Hide Shorts | Removes Shorts shelves, videos and sidebar links. Direct Shorts links open as normal videos |
-| | Hide home feed | Hides the home grid and the Home button. The logo then goes to Subscriptions |
+| | Hide home feed | Hides the home grid and the Home button. Opening the home page (logo, address bar, bookmark) goes to Subscriptions instead |
 | | Hide Trending / Explore | Removes the Explore section and pages |
 | Video page | Hide comments | Hides the comments section |
 | | Hide recommended | Hides the suggested-videos list |
 | | Hide end suggestions | Hides the end-of-video wall, in-video cards and the pause overlay |
 | | Hide live chat | Hides the chat panel on live streams |
+| | Make videos greyscale | Turns every video player greyscale: watch page, Shorts and miniplayer. Off by default, and works at any slider step |
 | Attention | Turn off autoplay | Switches off the "up next" autoplay toggle in the player |
 | | Hide notifications | Hides the bell and removes the unread count from the tab title |
 | | Stop hover previews | Stops the video preview that plays when you hover a thumbnail |
@@ -50,16 +50,16 @@ Blur is only used at step 3, so it never blurs the text tiles.
 
 A collapsed section in the popup, for the smaller changes:
 
-| Toggle | Effect |
-|---|---|
-| Hide view / like / sub counts | Hides view, like and subscriber counts. On video cards it hides the whole "views + age" line |
-| Hide description | Hides the description box under the player |
-| Hide like & share bar | Hides the like, share and save buttons |
-| Hide channel row | Hides the channel name and subscribe button under the player |
-| Hide donate / merch | Hides donation, merch and ticket shelves |
-| Hide comment avatars | Hides profile pictures beside comments |
-| Hide "More from YouTube" | Hides the Premium, Music and Kids section of the sidebar |
-| Hide "You" section | Hides History, Playlists, Watch later and Liked videos in the sidebar |
+| Group | Toggle | Effect |
+|---|---|---|
+| Video page | Hide counts, date & hashtags | Hides the subscriber count, the like count, and the "views · date · #hashtags" line at the top of the description. Video cards elsewhere keep their counts |
+| | Hide description | Hides the whole description box, including the "views · date · #hashtags" line |
+| | Hide like & share bar | Hides the whole button row: like, share, Ask, save, and the ⋯ menu (download, report) |
+| | Hide channel row | Hides the channel name, avatar, subscriber count and subscribe button under the player |
+| | Hide donate / merch | Hides donation, merch and ticket shelves |
+| | Hide comment avatars | Hides profile pictures beside comments |
+| Sidebar | Hide "More from YouTube" | Hides the Premium, Music and Kids section of the sidebar |
+| | Hide "You" section | Hides History, Playlists, Watch later and Liked videos in the sidebar |
 
 Settings are remembered across tabs and browser restarts, and change in all open YouTube tabs at once.
 
@@ -93,7 +93,7 @@ Settings are remembered across tabs and browser restarts, and change in all open
 ```
 SubdueTube/
 ├── manifest.json      # Extension config (Manifest V3)
-├── popup.html         # The settings popup: master switch, presets, slider, toggles
+├── popup.html         # The settings popup: master switch, slider, toggles
 ├── popup.js           # Loads and saves popup settings in chrome.storage
 ├── background.js      # Keeps the toolbar icon in sync with the master switch and slider
 ├── content.js         # Turns settings into classes on the page; text tiles, autoplay, tab title, redirects
@@ -108,10 +108,10 @@ SubdueTube/
 
 ## How It Works
 
-1. **`popup.js`** saves each setting to `chrome.storage.local`. The slider is stored as one number, `thumbLevel` (0 to 4), each toggle as true/false, and the master switch as `enabled`. Presets write many of these at once.
+1. **`popup.js`** saves each setting to `chrome.storage.local`. The slider is stored as one number, `thumbLevel` (0 to 4), each toggle as true/false, and the master switch as `enabled`. A setting that has never been saved counts as off, except the master switch, which counts as on.
 2. **`content.js`** runs on every YouTube page. It reads the settings, adds a class to `<html>` for each active one (for example `hide-shorts`), and redraws whenever storage changes, so all open tabs follow. If the master switch is off, no classes are added.
 3. **`style.css`** contains rules that only apply when the matching class is present, such as `html.hide-shorts ytd-reel-shelf-renderer { display: none }`.
-4. Five features need JavaScript, not just CSS: the text tiles (copy each card's title and channel into the thumbnail), autoplay (clicks YouTube's own switch off), the tab title (strips the "(3)" count), the logo redirect, and the Shorts link redirect.
+4. Five features need JavaScript, not just CSS: the text tiles (copy each card's title and channel into the thumbnail), autoplay (clicks YouTube's own switch off), the tab title (strips the "(3)" count), the home page redirect, and the Shorts link redirect.
 5. **`background.js`** swaps the toolbar icon to its active version whenever the master switch is on and the slider is above Off.
 
 ---
@@ -120,7 +120,6 @@ SubdueTube/
 
 - YouTube changes its page markup often. If a toggle stops working, its selector in `style.css` or `content.js` probably needs updating.
 - Turning off autoplay changes YouTube's own autoplay setting, which is saved to your account when signed in.
-- Typing `youtube.com` in the address bar still opens the (hidden, so blank) home page when "Hide home feed" is on. Only the logo is redirected.
 
 ---
 

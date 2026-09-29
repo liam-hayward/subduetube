@@ -1,12 +1,12 @@
-/* Greyscale: player, avatars and thumbnails */
-html.grey-mode .yt-spec-avatar-shape,
-html.grey-mode #movie_player,
-html.grey-mode .html5-video-player,
-html.grey-mode video,
+/* Greyscale (slider): thumbnails and hover previews.
+   Video players and channel pictures are left alone; their own toggles handle those.
+   .ytCoreImageHost is YouTube's class for most images, channel pictures included,
+   so the :not() skips any image inside a channel picture. */
+html.grey-mode ytd-video-preview,
 html.grey-mode .ytThumbnailViewModelImage,
 html.grey-mode .ytd-thumbnail,
 html.grey-mode .ytThumbnailViewModelHost,
-html.grey-mode .ytCoreImageHost {
+html.grey-mode .ytCoreImageHost:not(yt-avatar-shape *, .yt-spec-avatar-shape *) {
     filter: grayscale(100%) !important;
 }
 
@@ -14,7 +14,7 @@ html.grey-mode .ytCoreImageHost {
 html.blur-mode .ytThumbnailViewModelImage,
 html.blur-mode .ytd-thumbnail,
 html.blur-mode .ytThumbnailViewModelHost,
-html.blur-mode .ytCoreImageHost {
+html.blur-mode .ytCoreImageHost:not(yt-avatar-shape *, .yt-spec-avatar-shape *) {
     filter: blur(2px) !important;
 }
 
@@ -23,8 +23,14 @@ html.blur-mode .ytCoreImageHost {
 html.grey-mode.blur-mode .ytThumbnailViewModelImage,
 html.grey-mode.blur-mode .ytd-thumbnail,
 html.grey-mode.blur-mode .ytThumbnailViewModelHost,
-html.grey-mode.blur-mode .ytCoreImageHost {
+html.grey-mode.blur-mode .ytCoreImageHost:not(yt-avatar-shape *, .yt-spec-avatar-shape *) {
     filter: grayscale(100%) blur(2px) !important;
+}
+
+/* Make channel pictures greyscale (toggle, off by default). Works at any slider step. */
+html.grey-avatars yt-avatar-shape,
+html.grey-avatars .yt-spec-avatar-shape {
+    filter: grayscale(100%) !important;
 }
 
 /* Distraction hiding. Each class is toggled on <html> by content.js */
@@ -113,7 +119,6 @@ html.replace-thumbnails .text-tile-channel {
     font-size: clamp(11px, 4.5cqw, 18px);
     color: #aaa;
 }
-
 /* Hover previews: the short video that plays when you hover a thumbnail */
 html.hide-preview ytd-video-preview {
     display: none !important;
@@ -151,24 +156,25 @@ html.hide-chat ytd-live-chat-frame#chat {
     display: none !important;
 }
 
-/* Watch in colour: the main player on the watch page keeps its colour.
-   Thumbnails, avatars and hover previews stay greyscale. */
-html.grey-mode.colour-player ytd-watch-flexy #movie_player,
-html.grey-mode.colour-player ytd-watch-flexy .html5-video-player,
-html.grey-mode.colour-player ytd-watch-flexy video {
-    filter: none !important;
+/* Make videos greyscale (toggle, off by default): every video player,
+   including the watch page, Shorts and the miniplayer. Works at any slider step. */
+html.grey-player #movie_player,
+html.grey-player .html5-video-player,
+html.grey-player video {
+    filter: grayscale(100%) !important;
 }
 
 /* ---- "More options" (popup accordion) ---- */
 
-/* Counts: views, likes, subscribers. Card rows that show "views • age" lose both. */
+/* Counts on the watch page: views + upload date, likes, subscribers.
+   Video cards elsewhere are left alone: their text rows have no labels, so the
+   only way to pick the view count is by position, and that differs per page.
+   The like count's class comes in two spellings (older and newer markup). */
 html.hide-counts #owner-sub-count,
 html.hide-counts ytd-video-view-count-renderer,
 html.hide-counts #info-container #info,
-html.hide-counts ytd-watch-metadata #actions like-button-view-model .yt-spec-button-shape-next__button-text-content,
-html.hide-counts ytd-video-meta-block #metadata-line,
-html.hide-counts .ytContentMetadataViewModelMetadataRow:nth-child(2),
-html.hide-counts .yt-content-metadata-view-model__metadata-row:nth-child(2) {
+html.hide-counts ytd-watch-metadata like-button-view-model .yt-spec-button-shape-next__button-text-content,
+html.hide-counts ytd-watch-metadata like-button-view-model .ytSpecButtonShapeNextButtonTextContent {
     display: none !important;
 }
 
